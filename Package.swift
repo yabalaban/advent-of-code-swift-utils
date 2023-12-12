@@ -7,7 +7,7 @@ import CompilerPluginSupport
 let package = Package(
     name: "aoc-utils",
     platforms: [
-       .macOS(.v10_13),
+       .macOS(.v10_15),
     ],
     products: [
         .library(
