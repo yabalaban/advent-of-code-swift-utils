@@ -115,6 +115,7 @@ class AOCProblemSet: ProblemSet {
 
 class InputLoader {
     private static let url = "https://adventofcode.com/"
+    private static let filename = "cache.txt"
     private let path: String
     private let cookie: String
  
@@ -124,14 +125,41 @@ class InputLoader {
     }
     
     func load() async throws -> String {
+        if let cached = try load(path) {
+            return cached
+        }
+        
         guard let url = URL(string: "\(Self.url)\(path)") else { fatalError("Can't create url: \(Self.url)\(path)") }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue(cookie, forHTTPHeaderField: "Cookie")
+        
         let response = try await URLSession.shared.data(for: request)
         guard let input = String(bytes: response.0, encoding: .utf8) else {
             fatalError("Failed to load input from \(url)")
         }
+        
+        try save(input, to: path)
         return input
+    }
+    
+    private func save(_ content: String, to path: String) throws {
+        guard let data = content.data(using: .utf8) else { fatalError("Can't encode input with .utf8") }
+        let fm = FileManager.default
+        let pathUrl = fm.temporaryDirectory.appendingPathComponent(path)
+        try fm.createDirectory(atPath: pathUrl.path, withIntermediateDirectories: true, attributes: nil)
+        fm.createFile(atPath: pathUrl.appendingPathComponent(Self.filename).relativePath,
+                      contents: data)
+    }
+    
+    private func load(_ path: String) throws -> String? {
+        let fm = FileManager.default
+        let pathUrl = FileManager.default.temporaryDirectory.appendingPathComponent(path)
+        if let data = fm.contents(atPath: pathUrl.appendingPathComponent(Self.filename).relativePath) {
+            return String(data: data, encoding: .utf8)
+        } else {
+            return nil
+        }
     }
 }
