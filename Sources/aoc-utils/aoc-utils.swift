@@ -124,7 +124,7 @@ class InputLoader {
     }
     
     func load() async throws -> String {
-        let url = URL(fileURLWithPath: "\(Self.url)\(path)")
+        guard let url = URL(string: "\(Self.url)\(path)") else { fatalError("Can't create url: \(Self.url)\(path)") }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue(cookie, forHTTPHeaderField: "Cookie")
