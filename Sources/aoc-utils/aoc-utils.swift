@@ -11,8 +11,8 @@ import Foundation
 public typealias Solution = (String) -> Int
 
 public protocol DailyProblem {
-    var part1: Solution? { get }
-    var part2: Solution? { get }
+    var part1: Solution? { get set }
+    var part2: Solution? { get set }
 }
 
 public protocol ProblemSet {
