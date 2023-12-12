@@ -99,7 +99,7 @@ class AOCProblemSet: ProblemSet {
         if let problem = dailies[day] {
             return problem
         } else {
-            let loader = InputLoader("\(year)/day/\(day.rawValue)", cookie)
+            let loader = InputLoader("\(year)/day/\(day.rawValue)/input", cookie)
             let problem = AOCDailyProblem(loader, "Day \(day.rawValue)")
             dailies[day] = problem
             return problem
